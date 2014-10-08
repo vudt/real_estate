@@ -1,13 +1,13 @@
 jQuery(document).ready(function(){
-    XGOON.initSubMenu();
-    XGOON.initScrollTop();
-    XGOON.initGalleria();
-    XGOON.intitUtilityTab();
-    XGOON.init_niceScroll();
-    XGOON.initDatePicker();
+    Builder.initSubMenu();
+    Builder.initScrollTop();
+    Builder.initGalleria();
+    Builder.intitUtilityTab();
+    Builder.init_niceScroll();
+    Builder.initDatePicker();
 });
 
-var XGOON = {
+var Builder = {
     
     initDatePicker: function(){
         if($('.date-picker').length == 0) return;
@@ -125,14 +125,14 @@ var XGOON = {
                     if (inputElements.length > 0) {
                         inputElements.each(function() {
                             var inputElement = jQuery(this);
-                            if (!XGOON.validateElement(inputElement, true)) {
+                            if (!Builder.validateElement(inputElement, true)) {
                                 error++;
                             }
                         });
                     }
                     if (content.length) {
                         content.each(function() {
-                            if (!XGOON.isNotOnlySpace(jQuery(this).val())) {
+                            if (!Builder.isNotOnlySpace(jQuery(this).val())) {
                                 error++;
                                 jQuery(this).addClass('error');
                                 jQuery(this).parent().append('<label class="error">Vui lòng nhập đầy đủ thông tin.</label>');
@@ -149,7 +149,7 @@ var XGOON = {
                         });
                         for (var i = 0; i < groupName.length; i++) {
                             var radBox = jQuery('input[name="' + groupName[i] + '"]');
-                            if (!XGOON.validateRadiobox(groupName[i])) {
+                            if (!Builder.validateRadiobox(groupName[i])) {
                                 error++;
                                 radBox.parents('.form-item').find('label.error').remove();
                                 radBox.parents('.form-item').append('<label class="error">Vui lòng nhập đầy đủ thông tin.</label>');
@@ -161,7 +161,7 @@ var XGOON = {
                     }
                     if (selectbox.length) {
                         selectbox.each(function() {
-                            if (!XGOON.validateSelectbox(jQuery(this))) {
+                            if (!Builder.validateSelectbox(jQuery(this))) {
                                 error++;
                             } else {
                                 jQuery(this).removeClass('error');
@@ -175,7 +175,7 @@ var XGOON = {
                             inputTypes.each(function() {
                                 var inputType = jQuery(this);
                                 if (jQuery.trim(inputType.val()) !== '') {
-                                    if (!XGOON.validateElement(inputType, false, types[i])) {
+                                    if (!Builder.validateElement(inputType, false, types[i])) {
                                         error++;
                                     }
                                 }
@@ -194,7 +194,7 @@ var XGOON = {
                             var error = 0;
                             inputType.keyup(function() {
                                 if (inputType.val().length > 0) {
-                                    if (!XGOON.validateElement(inputType, false, types[i])) {
+                                    if (!Builder.validateElement(inputType, false, types[i])) {
                                         error++;
                                     }
                                 }
@@ -209,7 +209,7 @@ var XGOON = {
                 if (selectbox.length) {
                     var error = 0;
                     selectbox.change(function() {
-                        if (!XGOON.validateSelectbox(jQuery(this))) {
+                        if (!Builder.validateSelectbox(jQuery(this))) {
                             error++;
                         } else {
                             error = 0;
@@ -225,7 +225,7 @@ var XGOON = {
                     var error = 0;
                     radiobox.change(function() {
 
-                        if (!XGOON.validateRadiobox(jQuery(this).attr('name'))) {
+                        if (!Builder.validateRadiobox(jQuery(this).attr('name'))) {
                             error++;
                             jQuery(this).parents('.form-item').find('label.error').remove();
                             jQuery(this).parents('.form-item').append('<label class="error">Vui lòng nhập đầy đủ thông tin.</label>');
@@ -239,7 +239,7 @@ var XGOON = {
                     var inputElement = jQuery(this);
                     var error = 0;
                     inputElement.keyup(function() {
-                        if (!XGOON.validateElement(inputElement, true)) {
+                        if (!Builder.validateElement(inputElement, true)) {
                             error++;
                         }
                     });
@@ -320,14 +320,14 @@ var XGOON = {
             }
         }
         if (inputElement.hasClass('validateEmail') || inputElement.attr('type').toLowerCase() === 'email' || type.toLowerCase() === 'email') {
-            if (!XGOON.isEmail(inputElement.val())) {
+            if (!Builder.isEmail(inputElement.val())) {
                 inputElement.parent().append('<label class="error">Email này không hợp lệ</label>');
                 inputElement.addClass('error');
                 return false;
             }
         }
         if (inputElement.hasClass('validateUrl') || inputElement.attr('type').toLowerCase() === 'url' || type.toLowerCase() === 'url') {
-            if (!XGOON.isUrl(inputElement.val())) {
+            if (!Builder.isUrl(inputElement.val())) {
                 inputElement.parent().append('<label class="error">This field is url</label>');
                 inputElement.addClass('error');
                 return false;
