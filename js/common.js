@@ -4,10 +4,39 @@ jQuery(document).ready(function(){
     Builder.initGalleria();
     Builder.intitUtilityTab();
     Builder.init_niceScroll();
-    Builder.initDatePicker();
+    //Builder.initDatePicker();
+    Builder.initAjaxTypeofEstate();
 });
 
 var Builder = {
+    
+    initAjaxTypeofEstate: function(){
+        if($('.user_post').length == 0) return;
+        $("select[name='type_real_estate']").change(function(){
+            var val = $(this).find('option:selected').val();
+            var options = '';
+            $.ajax({
+                type: 'GET',
+                url: ajaxObj.ajax_url,
+                cache: false,
+                dataType: 'json',
+                data: {
+                    action: 'cb_ajax',
+                    val: val,
+                    type: 'typeof'
+                },
+                success: function(data, textStatus, jqXHR) {
+                    if(data.length > 0) {
+                        $(data).each(function(i){
+                            options += '<option value="' + data[i].term_id + '">' + data[i].name + '</option>'
+                        });
+                        $("select[name='child-of-type']").empty();
+                        $(options).appendTo("select[name='child-of-type']");
+                    }
+                }
+            });
+        });
+    },
     
     initDatePicker: function(){
         if($('.date-picker').length == 0) return;

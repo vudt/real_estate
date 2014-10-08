@@ -18,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri() ?>/font-awesome-4.1.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri() ?>/css/style.css" />
     <script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/js/jlib.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="<?php echo get_template_directory_uri() ?>/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/js/common.js"></script>
     <!--[if lt IE 9]>
