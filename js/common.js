@@ -74,13 +74,12 @@ var Builder = {
         infoWindow.open(map, marker);
     },
     
-    getAddress: function(point, map, marker, infoWindow){
+    getAddress: function(point, map, marker, infoWindow, addressReturn){
         var latlng = new google.maps.LatLng(point.lat(), point.lng());
         var geocoder = new google.maps.Geocoder();
         geocoder.geocode({ 'latLng': latlng }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if(results[0]) {
-                    console.log(results[0].formatted_address);
                     infoWindow.setContent("<span id='address'><strong> Địa chỉ : </strong>" + results[0].formatted_address  + "</span>");
                     addressReturn = results[0].formatted_address;
                     infoWindow.open(map, marker);
