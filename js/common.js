@@ -67,6 +67,7 @@ var Builder = {
             map.panTo(point); 
             // Update address after drop & drag
             Builder.getAddress(point, map, marker, infoWindow, addressReturn); 
+            $('#location').val(point.k + ',' + point.B);
         });
     },
     
@@ -84,6 +85,7 @@ var Builder = {
         // Update address after drop & drag
         Builder.getAddress(location, map, marker, infoWindow, addressReturn); 
         map.setCenter(location);
+        $('#location').val(location.k + ',' + location.B);
     },
     
     showAddress: function(marker, map, infoWindow, address){
