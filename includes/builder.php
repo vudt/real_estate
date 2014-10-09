@@ -7,7 +7,7 @@ class BuilderPropress {
     
     /** Gets things started **/
     public function __construct() {
-        add_action('wp_enqueue_scripts', array($this, 'register_scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'script_enqueuer'));
         add_action('wp_ajax_cb_ajax', array($this, 'cb_ajax'));
         add_action('wp_ajax_nopriv_cb_ajax', array($this, 'cb_ajax'));
         add_action('init', array($this, 'insert_post'));
@@ -18,13 +18,32 @@ class BuilderPropress {
     }
     
     public function cb_ajax(){
-        if(!isset($_GET['type'])) return; 
+        if(!isset($_POST['type'])) return; 
         
-        if($_GET['type'] == 'typeof') {
-            $result = json_encode($this->get_child_categories($_GET['val']));
-            echo $result;
-            exit();
+        switch($_POST['type']){
+            case 'typeof':
+                $result = $this->get_child_categories($_POST['val']);
+                echo json_encode($result); exit();
+                break;
+            case 'province':
+                $result = $this->get_location_where($_POST['val'], 'districts', 'districtid', 'name', 'provinceid');
+                echo json_encode($result);  exit();
+            case 'district':
+                $result = $this->get_location_where($_POST['val'], 'wards', 'wardid', 'name', 'districtid');
+                echo json_encode($result); exit();
+                break;
         }
+    }
+    
+    private function get_location_where($id = null, $tblName, $col1, $col2, $where = null) {
+        global $wpdb;
+        $tbl = $wpdb->prefix . $tblName;
+        if ($where == null) {
+            $results = $wpdb->get_results("SELECT $col1 AS value, $col2 AS name FROM $tbl");
+            return $results;
+        }
+        $results = $wpdb->get_results("SELECT $col1 AS value, $col2 AS name FROM $tbl WHERE $where = $id ");
+        return $results;
     }
     
     private function get_child_categories($parent){

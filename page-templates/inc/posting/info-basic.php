@@ -38,13 +38,19 @@
 <div class="wrapp">
     <div class="form-item col-xs-6">
         <label>Tỉnh/Thành phố</label>
-        <select>
+        <select name="province" class="cbb" id="province">
             <option value="0">Chọn tỉnh/thành phố</option>
+            <?php 
+            $tblName = $wpdb->prefix . 'cities';
+            $cities = $wpdb->get_results("SELECT provinceid AS value, name AS name FROM $tblName");
+            foreach($cities as $city): ?>
+                <option value="<?php echo $city->value ?>"><?php echo $city->name; ?></option>
+            <?php endforeach; ?>
         </select>    
     </div>
     <div class="form-item col-xs-6">
         <label>Quận/Huyện</label>
-        <select>
+        <select name="district" class="cbb" id="district">
             <option value="0">Chọn quận/huyện</option>
         </select>
     </div>
@@ -52,7 +58,7 @@
 <div class="wrapp">
     <div class="form-item col-xs-6">
         <label>Phường/Xã</label>
-        <select>
+        <select name="wards" class="cbb" id="wards">
             <option value="0">Chọn phường/xã</option>
         </select>    
     </div>

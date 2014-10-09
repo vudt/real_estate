@@ -6,6 +6,7 @@ jQuery(document).ready(function(){
     Builder.init_niceScroll();
     //Builder.initDatePicker();
     Builder.initAjaxTypeofEstate();
+    Builder.initLocation('.user_post');
 });
 
 var Builder = {
@@ -16,7 +17,7 @@ var Builder = {
             var val = $(this).find('option:selected').val();
             var options = '';
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 url: ajaxObj.ajax_url,
                 cache: false,
                 dataType: 'json',
@@ -33,6 +34,47 @@ var Builder = {
                         $("select[name='child-of-type']").empty();
                         $(options).appendTo("select[name='child-of-type']");
                     }
+                }
+            });
+        });
+    },
+    
+    initLocation: function(element) {
+        if ($(element).length == 0) return;
+        $(element).on('change', '.cbb', function() {
+            var type = $(this).attr('id');
+            var val = $(this).find('option:selected').val();
+            
+            $.ajax({
+                type: 'POST',
+                url: ajaxObj.ajax_url,
+                cache: false,
+                dataType: 'json',
+                data: {
+                    action: 'cb_ajax',
+                    type: type,
+                    val: val
+                },
+                success: function(data, textStatus, jqXHR) {
+                    if (data.length > 0) {   
+                        if (type == 'province') {
+                            var options = '<option value="0"> -- Quận/Huyện -- </option>';
+                            $(data).each(function(i) {
+                                options += '<option value="' + data[i].value + '">' + data[i].name + '</option>'
+                            })
+                            $('#district').empty();
+                            $('#wards').empty();
+                            $('<option value="0"> -- Phường/Xã -- </option>').appendTo('#wards');
+                            $(options).appendTo('#district');
+                        } else if (type == 'district') {
+                            var options = '';
+                            $(data).each(function(i) {
+                                options += '<option value="' + data[i].value + '">' + data[i].name + '</option>'
+                            })
+                            $('#wards').empty();
+                            $(options).appendTo('#wards');
+                        }
+                    } 
                 }
             });
         });
