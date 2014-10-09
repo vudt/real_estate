@@ -8,16 +8,22 @@ jQuery(document).ready(function(){
     Builder.initAjaxTypeofEstate();
     Builder.initLocation('.user_post');
     Builder.initGoogleMap();
+    //https://maps.googleapis.com/maps/api/geocode/json?address=10%2051%2029N,%20106%2044%2019E&key=AIzaSyC_rmx9OrmjuAs5_9Sl6eJ2dVf_VqslyWo
 });
 
 var Builder = {
     
     initGoogleMap: function() {
-        if ($('#map_canvas').length == 0)
-            return;
+        if ($('#map_canvas').length == 0) return;
         
+        var map = null;
+        var marker = null;
+        // set static address
+        var addressReturn = 'ABC 4156 789';
         // set static latlng
         var latlng = new google.maps.LatLng(10.857805, 106.7377889);
+        // init InfoWindow
+        var infoWindow = new google.maps.InfoWindow();
         // Set map options
         var myOptions = {
             zoom: 16,
@@ -27,6 +33,7 @@ var Builder = {
             scaleControl: true,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         }
+        
         // Create map object with options
         map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
         
@@ -36,37 +43,56 @@ var Builder = {
             draggable: true,
             position: latlng
         });
-        
-        Builder.showAddress(marker, map, 'xx');
+
+        Builder.showAddress(marker, map, infoWindow, addressReturn);
         
         // Register Custom "Click" Event on map
+        /*
         google.maps.event.addListener(map, 'click', function(event){
             Builder.placeMarker(marker, map, event.latLng);
             Builder.showAddress(marker, map, 'abcg d  ds ds sd sd d');
+        });*/
+        
+        // Register Custom "dragstart" Event
+        google.maps.event.addListener(marker, 'dragstart', function(){
+            infoWindow.close()
         });
 
         // Register Custom "dragend" Event
         google.maps.event.addListener(marker, 'dragend', function() {
             // Get the Current position, where the pointer was dropped
-            var point = marker.getPosition();
-
+            var point = marker.getPosition(); 
             // Center the map at given point
-            map.panTo(point);
-            // Update the hidden input
-            //document.getElementById('txt_latlng').value = point.lat() + ", " + point.lng();
+            map.panTo(point); 
+            // Update address after drop & drag
+            Builder.getAddress(point, map, marker, infoWindow, addressReturn); 
         });
     },
     
-    showAddress: function(marker, map, address){
-        var infoWindow = new google.maps.InfoWindow();
+    showAddress: function(marker, map, infoWindow, address){
         infoWindow.setContent("<span id='address'><b>Địa chỉ : </b>" + address + "</span>");
         infoWindow.open(map, marker);
+    },
+    
+    getAddress: function(point, map, marker, infoWindow){
+        var latlng = new google.maps.LatLng(point.lat(), point.lng());
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if(results[0]) {
+                    console.log(results[0].formatted_address);
+                    infoWindow.setContent("<span id='address'><strong> Địa chỉ : </strong>" + results[0].formatted_address  + "</span>");
+                    addressReturn = results[0].formatted_address;
+                    infoWindow.open(map, marker);
+                }
+            } 
+        });
+        map.setCenter(point);
     },
     
     placeMarker: function(marker, map, location){
         var infoWindow = new google.maps.InfoWindow();
         marker.setMap(null);
-        console.log(marker);
         marker = new google.maps.Marker({
             map: map,
             position: location,
