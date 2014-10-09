@@ -568,6 +568,7 @@ ul.benefits li {color: #fff; font-family: UTM Bebas; font-size: 16px; padding-le
 .m-btn {background: #007bb0; padding: 10px 14px; color: #fff; font-family: Tahoma; font-weight: bold; font-size: 12px; border: none; margin-right: 5px}
 .gold {color: #e2ec53}
 .l-modal .c-close {position: absolute; left: 5px; top: 2px}
+#map_canvas {width: 745px; height: 300px}
 @-moz-document url-prefix(){
     .c-calendar {height: 29px; margin-left: -28px; padding-top: 8px}
     .c-tags {height: 29px; padding-top: 8px}

@@ -9,4 +9,4 @@
 ?>
 
 <p>Hãy chọn vị trí chính xác trên bản đồ bằng cách kéo rê biểu tượng vị trí đến chính xác của tài sản. Điều này giúp cho tài sản của bạn được ìm thấy nhanh hơn nhiều lần 1 tin không có vị trí bản đồ</p>
-<div class="map-post"><img src="images/map-post.png"></div>
+<div id="map_canvas" class="map-post"></div>

@@ -7,9 +7,75 @@ jQuery(document).ready(function(){
     //Builder.initDatePicker();
     Builder.initAjaxTypeofEstate();
     Builder.initLocation('.user_post');
+    Builder.initGoogleMap();
 });
 
 var Builder = {
+    
+    initGoogleMap: function() {
+        if ($('#map_canvas').length == 0)
+            return;
+        
+        // set static latlng
+        var latlng = new google.maps.LatLng(10.857805, 106.7377889);
+        // Set map options
+        var myOptions = {
+            zoom: 16,
+            center: latlng,
+            panControl: true,
+            zoomControl: true,
+            scaleControl: true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        // Create map object with options
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        
+        // Create and set the marker
+        marker = new google.maps.Marker({
+            map: map,
+            draggable: true,
+            position: latlng
+        });
+        
+        Builder.showAddress(marker, map, 'xx');
+        
+        // Register Custom "Click" Event on map
+        google.maps.event.addListener(map, 'click', function(event){
+            Builder.placeMarker(marker, map, event.latLng);
+            Builder.showAddress(marker, map, 'abcg d  ds ds sd sd d');
+        });
+
+        // Register Custom "dragend" Event
+        google.maps.event.addListener(marker, 'dragend', function() {
+            // Get the Current position, where the pointer was dropped
+            var point = marker.getPosition();
+
+            // Center the map at given point
+            map.panTo(point);
+            // Update the hidden input
+            //document.getElementById('txt_latlng').value = point.lat() + ", " + point.lng();
+        });
+    },
+    
+    showAddress: function(marker, map, address){
+        var infoWindow = new google.maps.InfoWindow();
+        infoWindow.setContent("<span id='address'><b>Địa chỉ : </b>" + address + "</span>");
+        infoWindow.open(map, marker);
+    },
+    
+    placeMarker: function(marker, map, location){
+        var infoWindow = new google.maps.InfoWindow();
+        marker.setMap(null);
+        console.log(marker);
+        marker = new google.maps.Marker({
+            map: map,
+            position: location,
+            draggable: true
+        });
+        google.maps.event.addListener(marker, 'click', function () { infoWindow.open(map, marker); });
+        var point = marker.getPosition();
+        map.setCenter(location);
+    },
     
     initAjaxTypeofEstate: function(){
         if($('.user_post').length == 0) return;

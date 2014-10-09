@@ -19,6 +19,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri() ?>/css/style.css" />
     <script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/js/jlib.js"></script>
     <script src="<?php echo get_template_directory_uri() ?>/js/jquery.min.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/js/common.js"></script>
     <!--[if lt IE 9]>
