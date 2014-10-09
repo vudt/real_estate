@@ -43,21 +43,22 @@ var Builder = {
             draggable: true,
             position: latlng
         });
-
+        
         Builder.showAddress(marker, map, infoWindow, addressReturn);
         
         // Register Custom "Click" Event on map
-        /*
         google.maps.event.addListener(map, 'click', function(event){
-            Builder.placeMarker(marker, map, event.latLng);
-            Builder.showAddress(marker, map, 'abcg d  ds ds sd sd d');
-        });*/
+            Builder.placeMarker(marker, map, infoWindow, event.latLng, addressReturn);
+        });
         
+        Builder.dragEvent(marker, map, infoWindow, addressReturn);
+    },
+    
+    dragEvent: function(marker, map, infoWindow, addressReturn){
         // Register Custom "dragstart" Event
         google.maps.event.addListener(marker, 'dragstart', function(){
             infoWindow.close()
         });
-
         // Register Custom "dragend" Event
         google.maps.event.addListener(marker, 'dragend', function() {
             // Get the Current position, where the pointer was dropped
@@ -67,6 +68,22 @@ var Builder = {
             // Update address after drop & drag
             Builder.getAddress(point, map, marker, infoWindow, addressReturn); 
         });
+    },
+    
+    placeMarker: function(marker, map, infoWindow, location, addressReturn) {
+        if(marker == undefined) {
+            marker = new google.maps.Marker({
+                map: map,
+                position: location,
+                draggable: true
+            });
+        }else {
+            marker.setPosition(location);
+        }
+        Builder.dragEvent(marker, map, infoWindow, location);
+        // Update address after drop & drag
+        Builder.getAddress(location, map, marker, infoWindow, addressReturn); 
+        map.setCenter(location);
     },
     
     showAddress: function(marker, map, infoWindow, address){
@@ -87,19 +104,6 @@ var Builder = {
             } 
         });
         map.setCenter(point);
-    },
-    
-    placeMarker: function(marker, map, location){
-        var infoWindow = new google.maps.InfoWindow();
-        marker.setMap(null);
-        marker = new google.maps.Marker({
-            map: map,
-            position: location,
-            draggable: true
-        });
-        google.maps.event.addListener(marker, 'click', function () { infoWindow.open(map, marker); });
-        var point = marker.getPosition();
-        map.setCenter(location);
     },
     
     initAjaxTypeofEstate: function(){
