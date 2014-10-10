@@ -7,21 +7,40 @@ jQuery(document).ready(function(){
     //Builder.initDatePicker();
     Builder.initAjaxTypeofEstate();
     Builder.initLocation('.user_post');
-    Builder.initGoogleMap();
+    Builder.convertLatLng();
+    //Builder.initGoogleMap();
     //https://maps.googleapis.com/maps/api/geocode/json?address=10%2051%2029N,%20106%2044%2019E&key=AIzaSyC_rmx9OrmjuAs5_9Sl6eJ2dVf_VqslyWo
 });
 
+jQuery(window).load(function(){
+    
+})
+
 var Builder = {
     
-    initGoogleMap: function() {
+    
+    convertLatLng: function(){
+        var location = $('#location').val();
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({address: location}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                console.log(results);
+                var latlng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
+                Builder.initGoogleMap(latlng, results[0].formatted_address);
+            }
+        });
+    },
+    
+    initGoogleMap: function(location, address) {
         if ($('#map_canvas').length == 0) return;
-        
+       
         var map = null;
         var marker = null;
         // set static address
-        var addressReturn = 'ABC 4156 789';
-        // set static latlng
-        var latlng = new google.maps.LatLng(10.857805, 106.7377889);
+        var addressReturn = address;        
+        // set latlng
+        var arr = location.split(',');
+        var latlng = new google.maps.LatLng(arr[0], arr[1]);
         // init InfoWindow
         var infoWindow = new google.maps.InfoWindow();
         // Set map options

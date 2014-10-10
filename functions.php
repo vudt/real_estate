@@ -1,6 +1,7 @@
 <?php
 
 load_template(get_template_directory() . '/includes/builder.php', TRUE);
+load_template(get_template_directory() . '/includes/UserInfo.php', TRUE);
 
 /**
  * Denied access member go to Admin Dashboard and Profile

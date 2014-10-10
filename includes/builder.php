@@ -13,6 +13,10 @@ class BuilderPropress {
         add_action('init', array($this, 'insert_post'));
     }
     
+    public function concat(){
+        echo 'concattt';
+    }
+    
     public function script_enqueuer(){
         wp_localize_script('common-scripts', 'ajaxObj', array('ajax_url' => admin_url('admin-ajax.php')));
     }
