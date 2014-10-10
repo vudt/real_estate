@@ -1,27 +1,27 @@
 <?php
+if (!defined('ABSPATH')) exit(); // Exit if accessed directly
 
-if( !defined('ABSPATH') ) exit(); // Exit if accessed directly
+class UserInfo {
 
-require_once 'UserPropress.php';
+    private static $instance = null;
 
-class UserInfo extends UserPropress{
-
-    function __construct() {
-        
+    private function __construct() {
+        self::$instance = $this->_user_Current();
     }
     
-    public function getInfo(){
-        $userObj = UserPropress::getInstance();
-        return $userObj;
+    static function getInstance(){
+        if(self::$instance == null) {
+            new self;
+        }
+        return self::$instance;
     }
-    
-    public function getLatLng($location, $tblName, $where){
-        global $wpdb;
-        $results =  $wpdb->get_row( 'SELECT location '
-                                        . 'FROM ' . $wpdb->prefix.$tblName . ' '
-                                        . 'WHERE ' . $where . ' = ' . $location );
-        return $results;
+   
+    private function _user_Current(){
+        $user_current = wp_get_current_user();
+        if($user_current) {
+            $user_data = get_user_meta($user_current->ID, 'member_custom_fields');
+            $user_current->meta_data = $user_data[0];
+        }
+        return $user_current;
     }
 }
-
-

@@ -13,14 +13,10 @@ class BuilderPropress {
         add_action('init', array($this, 'insert_post'));
     }
     
-    public function concat(){
-        echo 'concattt';
-    }
-    
-    public function script_enqueuer(){
+    public function script_enqueuer() {
         wp_localize_script('common-scripts', 'ajaxObj', array('ajax_url' => admin_url('admin-ajax.php')));
     }
-    
+
     public function cb_ajax(){
         if(!isset($_POST['type'])) return; 
         
@@ -30,15 +26,43 @@ class BuilderPropress {
                 echo json_encode($result); exit();
                 break;
             case 'province':
-                $result = $this->get_location_where($_POST['val'], 'districts', 'districtid', 'name', 'provinceid');
-                echo json_encode($result);  exit();
+                $cols = array(
+                    'name'      => 'name',
+                    'value'     => 'districtid'
+                );
+                $result = $this->get_location_where($_POST['val'], 'districts', $cols, 'provinceid');
+                echo json_encode($result); exit();
             case 'district':
-                $result = $this->get_location_where($_POST['val'], 'wards', 'wardid', 'name', 'districtid');
+                $cols = array(
+                    'name'      => 'name',
+                    'value'     => 'wardid',
+                    'location'  => 'location'
+                );
+                $result = $this->get_location_where($_POST['val'], 'wards', $cols, 'districtid');
                 echo json_encode($result); exit();
                 break;
         }
     }
     
+    private function get_location_where($id = null, $tblName, $cols, $where = null) {
+        global $wpdb;
+        $tbl = $wpdb->prefix . $tblName;
+        
+        $columns = '';
+        foreach($cols as $key => $col) {
+            $columns .= $col . ' AS ' . $key . ', ';
+        }
+        $columns = substr(trim($columns), 0, -1);
+
+        if ($where == null) {
+            $results = $wpdb->get_results("SELECT $columns FROM $tbl");
+            return $results;
+        }
+        $results = $wpdb->get_results("SELECT $columns FROM $tbl WHERE $where = $id ");
+        return $results;
+    }
+    
+    /*
     private function get_location_where($id = null, $tblName, $col1, $col2, $where = null) {
         global $wpdb;
         $tbl = $wpdb->prefix . $tblName;
@@ -48,7 +72,7 @@ class BuilderPropress {
         }
         $results = $wpdb->get_results("SELECT $col1 AS value, $col2 AS name FROM $tbl WHERE $where = $id ");
         return $results;
-    }
+    }*/
     
     private function get_child_categories($parent){
         $args = array(
